@@ -24,11 +24,15 @@
     filter: invert(1);
 }
 .bg-grey{
-    background-color: grey;
+    background-color: rgb(25, 24, 24);
 }
 .rounded{
     border-radius: 7px;
 }
 .m1{
     margin:6px
+}
+.p1
+{
+    padding:6px
 }
