@@ -25,26 +25,24 @@ async function main(){
     let songs=await getsongs();
     console.log(songs);
 
-    let songul=document.querySelector(".songlist").getElementsByTagName("ul")[0];
-
-    for(const song of songs)
-    {
-       songul.innerHTML+=` <img class="invert" src="music.svg" alt="">
+    let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0]
+    songUL.innerHTML = ""
+    for (const song of songs) {
+        songUL.innerHTML = songUL.innerHTML + `<li><img class="invert" width="34" src="img/music.svg" alt="">
                             <div class="info">
-                                <div>${song.replaceAll("%20", " ")}</div>
-                                <div class="artist">Harry</div>
+                                <div> ${song.replaceAll("%20", " ")}</div>
+                                <div>Chirag</div>
                             </div>
                             <div class="playnow">
                                 <span>Play Now</span>
-                                <img class="invert" src="play.svg" alt="">
-                            </div>
-
-                            </li>`;
+                                <img class="invert" src="img/play.svg" alt="">
+                            </div> </li>`;
+    }
     }
     //play the songs or do something with them
     var audio = new Audio(songs[0]);
     audio.play(); 
 
 
-}
+
 main();
