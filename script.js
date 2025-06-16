@@ -1,3 +1,4 @@
+let currentsong=new Audio();
 async function getsongs()
 {
     let a=await fetch("http://127.0.0.1:5500/songs/");
@@ -20,9 +21,18 @@ async function getsongs()
 
     
 }
+
+const playmusic =(track)=>{
+    currentsong.src=track;   
+currentsong.play();
+play.src="pause.svg";
+document.querySelector(".songinfo").innerHTML=decodeURIComponent(track.split("/").pop());;
+document.querySelector(".songtime").innerHTML="00/00";
+
+}
 async function main(){
 
-    let currentsong;
+ 
     //get the list of all songs from the API
     let songs=await getsongs();
     console.log(songs);
@@ -34,7 +44,8 @@ async function main(){
      html += `<li>
         <img class="invert" width="34" src="music.svg" alt="">
         <div class="info">
-            <div>${song.replaceAll("%20", " ")}</div>
+           <div class="track" data-src="${song}">${decodeURIComponent(song.split("/").pop())}</div>
+
             <div>Chirag</div>
         </div>
         <div class="playnow">
@@ -45,11 +56,40 @@ async function main(){
 }
 
 songUL.innerHTML = html;
-    
-
     //attach an event listener to each song
+    Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach((e) => {
+       e.addEventListener("click", element => {
+    const trackDiv = e.querySelector(".track");
+    const songURL = trackDiv.dataset.src;
+    console.log("Playing:", songURL);
+    playmusic(songURL);
+    });
+    })
+    
+  play.addEventListener("click", () => {
+    if(currentsong.paused) {
+        currentsong.play();
+        play.src="pause.svg";
     }
-  
+    else {
+        currentsong.pause();
+        play.src="play.svg";
+    }
+});
+}
+currentsong.addEventListener("timeupdate", () => {
+    let currentTime = currentsong.currentTime;
+    let duration = currentsong.duration;
+    let currentMinutes = Math.floor(currentTime / 60);
+    let currentSeconds = Math.floor(currentTime % 60);
+    let durationMinutes = Math.floor(duration / 60);
+    let durationSeconds = Math.floor(duration % 60);
+    
+    document.querySelector(".songtime").innerHTML =
+     `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}/${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : 
+        durationSeconds}`;
+}
+);
 
 
 main();
