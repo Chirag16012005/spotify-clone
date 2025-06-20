@@ -22,10 +22,13 @@ async function getsongs()
     
 }
 
-const playmusic =(track)=>{
+const playmusic =(track, pause=false)=>{
     currentsong.src=track;   
+    if(!pause)
+        {
 currentsong.play();
 play.src="pause.svg";
+        }
 document.querySelector(".songinfo").innerHTML=decodeURIComponent(track.split("/").pop());;
 document.querySelector(".songtime").innerHTML="00/00";
 
@@ -36,6 +39,7 @@ async function main(){
     //get the list of all songs from the API
     let songs=await getsongs();
     console.log(songs);
+    playmusic(songs[0], true);
 
     let songUL = document.querySelector(".songlist").getElementsByTagName("ul")[0];
     songUL.innerHTML = "";
@@ -88,8 +92,12 @@ currentsong.addEventListener("timeupdate", () => {
     document.querySelector(".songtime").innerHTML =
      `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}/${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : 
         durationSeconds}`;
-}
+        document.querySelector(".circle").style.left= (currentsong.currentTime/currentsong.duration) * 100 + "%";
+     }
 );
+document.querySelector(".seekbar").addEventListener("click", (e) => {
+console.log(e);
+});
 
 
 main();
