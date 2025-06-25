@@ -1,4 +1,5 @@
 let currentsong=new Audio();
+let songs;
 async function getsongs()
 {
     let a=await fetch("http://127.0.0.1:5500/songs/");
@@ -7,7 +8,7 @@ async function getsongs()
     let div=document.createElement("div");
     div.innerHTML=response;
     let as=div.getElementsByTagName("a");
-    let songs=[];
+     songs=[];
     for(let i=0;i<as.length;i++)
     {
         const element=as[i];
@@ -37,7 +38,7 @@ async function main(){
 
  
     //get the list of all songs from the API
-    let songs=await getsongs();
+    songs=await getsongs();
     console.log(songs);
     playmusic(songs[0], true);
 
@@ -93,11 +94,55 @@ currentsong.addEventListener("timeupdate", () => {
      `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}/${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : 
         durationSeconds}`;
         document.querySelector(".circle").style.left= (currentsong.currentTime/currentsong.duration) * 100 + "%";
-     }
-);
+     });
+
 document.querySelector(".seekbar").addEventListener("click", (e) => {
-console.log(e);
+    let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
+        document.querySelector(".circle").style.left = percent + "%";
+        currentsong.currentTime = ((currentsong.duration) * percent) / 100
 });
+document.querySelector(".hamburger").addEventListener("click", () => {
+    document.querySelector(".left").style.left ="5px";
+});
+document.querySelector(".close").addEventListener("click", () => {
+    document.querySelector(".left").style.left = "-120%";
+});
+
+previous.addEventListener("click", () => {
+    console.log("Previous song");
+    const currentFile = decodeURIComponent(currentsong.src.split("/").pop());
+
+    const index = songs.findIndex(song => {
+        return decodeURIComponent(song.split("/").pop()) === currentFile;
+    });
+    if(index - 1 >= 0)
+        {
+        playmusic(songs[index - 1]);    
+        }   
+        else {  
+        playmusic(songs[songs.length - 1]);
+        }
+   
+});
+next.addEventListener("click", () => {
+    console.log("Next song");
+    currentsong.pause();
+    const currentFile = decodeURIComponent(currentsong.src.split("/").pop());
+
+    const index = songs.findIndex(song => {
+        return decodeURIComponent(song.split("/").pop()) === currentFile;
+    });
+
+    // Play next song if it exists
+    if (index + 1 < songs.length)
+        {
+        playmusic(songs[index + 1]);
+        }
+        else { 
+        playmusic(songs[0]);
+        } 
+});
+
 
 
 main();
