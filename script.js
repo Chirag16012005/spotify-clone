@@ -1,5 +1,6 @@
 let currentsong=new Audio();
 let songs;
+let currfolder;
 async function getsongs()
 {
     let a=await fetch("http://127.0.0.1:5500/songs/");
@@ -119,7 +120,8 @@ previous.addEventListener("click", () => {
         {
         playmusic(songs[index - 1]);    
         }   
-        else {  
+        else 
+        {  
         playmusic(songs[songs.length - 1]);
         }
    
@@ -138,11 +140,16 @@ next.addEventListener("click", () => {
         {
         playmusic(songs[index + 1]);
         }
-        else { 
+        else
+        { 
         playmusic(songs[0]);
         } 
 });
 
-
+document.querySelector(".range").getElementsByTagName("input")[0].
+            addEventListener("change", (e) => {
+currentsong.volume = e.target.value / 100;
+console.log("Volume changed to:", currentsong.volume);
+});
 
 main();
